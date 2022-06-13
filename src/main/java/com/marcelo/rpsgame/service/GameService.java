@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.marcelo.rpsgame.Storage.RoomStorage;
+import com.marcelo.rpsgame.enums.GameStatus;
 import com.marcelo.rpsgame.exception.GlobalException;
 import com.marcelo.rpsgame.models.Game;
 import com.marcelo.rpsgame.models.GamePlay;
@@ -26,6 +27,7 @@ public class GameService {
 		game.setGameId(UUID.randomUUID().toString());
 		game.setPlayer1(player1);
 		game.setDraws(0);
+		game.setStatus(GameStatus.WAITING);
 		
 		return game;
 		
@@ -54,16 +56,26 @@ public class GameService {
 			game.setPlayer1Turn(true);
 		}
 		
+		//VERIFICA SE OS DOIS PLAYERS JOGARES E SE JOGARAM VERIFICA O GANHADOR
 		if(game.getPlayer1().getMove() != null && game.getPlayer2().getMove() != null) {
 			ganhador = checkWinner(game.getPlayer1(), game.getPlayer2());
+			
+		}else {
+			game.setHasAWinner(false);
+			game.setHasADraw(false);
 		}
 		
+		//VERIFICA SE TEVE GANHADOR NESSA RODADA E QUEM QUEM FOI
 		if(ganhador != null) {
 			
 			if(ganhador.getPlayer().getPlayerId().equals(game.getPlayer1().getPlayer().getPlayerId())) {
 				game.getPlayer1().setWins(game.getPlayer1().getWins()+1);
+				game.setLastWinner(ganhador.getPlayer());
+				game.setHasAWinner(true);
 			}else {
 				game.getPlayer2().setWins(game.getPlayer2().getWins()+1);
+				game.setLastWinner(ganhador.getPlayer());
+				game.setHasAWinner(true);
 			}
 			
 			game.getPlayer1().setMove(null);
@@ -72,6 +84,7 @@ public class GameService {
 		
 		if(game.getPlayer1().getMove() != null && game.getPlayer2().getMove() != null && ganhador == null) {
 			game.setDraws(game.getDraws()+1);
+			game.setHasADraw(true);
 			
 			game.getPlayer1().setMove(null);
 			game.getPlayer2().setMove(null);

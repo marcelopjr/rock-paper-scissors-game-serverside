@@ -48,9 +48,23 @@ public class RoomController {
 	
 	@PostMapping("/connect/{roomId}")
 	public ResponseEntity<Room> connectRoom(@PathVariable String roomId, @RequestBody Player player2) throws GlobalException{
-		Room room = roomService.connectToRoom(player2, roomId);
+		Room room = roomService.connectRoom(player2, roomId);
 		simpMessagingTemplate.convertAndSend("/topic/game-progress/"+roomId, room);
 		return ResponseEntity.ok(room);
+	}
+	
+	@PostMapping("/disconnect/{roomId}/{playerId}")
+	public ResponseEntity<Room> disconnectRoom(@PathVariable String roomId, @PathVariable String playerId) throws GlobalException{
+		Room room = roomService.disconnectRoom(roomId, playerId);
+		if(room == null) {
+			List<Room> listRoomsUpdated = roomService.getAllRooms();
+			simpMessagingTemplate.convertAndSend("/topic/newrooms", listRoomsUpdated);
+			return ResponseEntity.ok(room);
+		}else {
+			simpMessagingTemplate.convertAndSend("/topic/game-progress/"+roomId, room);
+			return ResponseEntity.ok(room);
+		}
+		
 	}
 	
 	@DeleteMapping("/close/{roomId}")

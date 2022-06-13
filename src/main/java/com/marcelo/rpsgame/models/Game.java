@@ -1,5 +1,7 @@
 package com.marcelo.rpsgame.models;
 
+import com.marcelo.rpsgame.enums.GameStatus;
+
 public class Game {
 	
 	private String gameId;
@@ -8,6 +10,13 @@ public class Game {
 	private Player playerTurn;
 	private boolean isPlayer1Turn;
 	private int draws;
+	
+	private Player lastWinner;
+	private boolean hasAWinner;
+	
+	private boolean hasADraw;
+	
+	private GameStatus status;
 
 	public String getGameId() {
 		return gameId;
@@ -55,6 +64,38 @@ public class Game {
 
 	public void setDraws(int draws) {
 		this.draws = draws;
+	}
+
+	public Player getLastWinner() {
+		return lastWinner;
+	}
+
+	public void setLastWinner(Player lastWinner) {
+		this.lastWinner = lastWinner;
+	}
+
+	public boolean isHasAWinner() {
+		return hasAWinner;
+	}
+
+	public void setHasAWinner(boolean hasAWinner) {
+		this.hasAWinner = hasAWinner;
+	}
+
+	public GameStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(GameStatus status) {
+		this.status = status;
+	}
+
+	public boolean isHasADraw() {
+		return hasADraw;
+	}
+
+	public void setHasADraw(boolean hasADraw) {
+		this.hasADraw = hasADraw;
 	}
 	
 }
