@@ -28,6 +28,7 @@ public class GameService {
 		game.setPlayer1(player1);
 		game.setDraws(0);
 		game.setStatus(GameStatus.WAITING);
+		game.setQuantityPlayer(1);
 		
 		return game;
 		

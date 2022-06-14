@@ -17,6 +17,8 @@ public class Game {
 	private boolean hasADraw;
 	
 	private GameStatus status;
+	
+	private int quantityPlayer;
 
 	public String getGameId() {
 		return gameId;
@@ -96,6 +98,14 @@ public class Game {
 
 	public void setHasADraw(boolean hasADraw) {
 		this.hasADraw = hasADraw;
+	}
+
+	public int getQuantityPlayer() {
+		return quantityPlayer;
+	}
+
+	public void setQuantityPlayer(int quantityPlayer) {
+		this.quantityPlayer = quantityPlayer;
 	}
 	
 }

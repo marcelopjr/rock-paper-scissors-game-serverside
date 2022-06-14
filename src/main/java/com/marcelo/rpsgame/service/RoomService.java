@@ -51,6 +51,11 @@ public class RoomService {
 		}
 		
 		Room room = RoomStorage.getInstance().getRooms().get(roomId);
+		
+		if(room.getGame().getQuantityPlayer() == 2) {
+			throw new GlobalException("Sala cheia!");
+		};
+		
 		PlayerGame playerGame = new PlayerGame();
 		
 		playerGame.setPlayer(player2);
@@ -59,6 +64,8 @@ public class RoomService {
 		room.getGame().setPlayer2(playerGame);
 		room.getGame().setPlayerTurn(room.getGame().getPlayer1().getPlayer());
 		room.getGame().setPlayer1Turn(true);
+		
+		room.getGame().setQuantityPlayer(2);
 		
 		room.getGame().setStatus(GameStatus.INGAME);
 		
@@ -84,19 +91,28 @@ public class RoomService {
 				
 				room.getGame().setPlayer1(room.getGame().getPlayer2());
 				room.getGame().setPlayer2(null);
+				
+				room.getGame().setQuantityPlayer(1);
 			}else {
 				room.getGame().setPlayer1(null);
+				room.getGame().setQuantityPlayer(0);
 			}
 			
-		}else if(room.getGame().getPlayer2().getPlayer().getPlayerId().equals(playerId)) {
+		}else if(room.getGame().getPlayer2() != null && room.getGame().getPlayer2().getPlayer().getPlayerId().equals(playerId)) {
 			
 			room.getGame().getPlayer1().setMove(null);
 			room.getGame().getPlayer1().setWins(0);
 			
 			room.getGame().setPlayer2(null);
+			room.getGame().setQuantityPlayer(1);
 			
 		} else {
 			throw new GlobalException("Jogador não presente na sala.");
+		}
+		
+		if(room.getGame().getPlayer1() == null && room.getGame().getPlayer2() == null) {
+			closeRoom(roomId);
+			return null;
 		}
 		
 		room.getGame().setPlayerTurn(null);
@@ -106,13 +122,9 @@ public class RoomService {
 		
 		room.getGame().setStatus(GameStatus.WAITING);
 		
-		if(room.getGame().getPlayer1() == null && room.getGame().getPlayer2() == null) {
-			closeRoom(roomId);
-			return null;
-		}else {
-			RoomStorage.getInstance().setRoom(room);
-			return room;
-		}
+		RoomStorage.getInstance().setRoom(room);
+		return room;
+		
 		
 	}
 	
