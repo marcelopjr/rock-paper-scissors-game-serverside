@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.marcelo.rpsgame.Storage.ChatStorage;
 import com.marcelo.rpsgame.Storage.RoomStorage;
 import com.marcelo.rpsgame.enums.GameStatus;
 import com.marcelo.rpsgame.exception.GlobalException;
@@ -20,6 +21,9 @@ public class RoomService {
 	
 	@Autowired
 	private GameService gameService;
+	
+	@Autowired
+	private ChatService chatService;
 	
 	public List<Room> getAllRooms(){
 		List<Room> listRoom = new ArrayList<Room>(RoomStorage.getInstance().getRooms().values());
@@ -39,6 +43,8 @@ public class RoomService {
 		room.setName(roomName);
 		room.setGame(newGame);
 		room.setCreator(player);
+		
+		chatService.createChat(room.getRoomId());
 		
 		RoomStorage.getInstance().setRoom(room);
 		return room;
@@ -134,6 +140,7 @@ public class RoomService {
 			throw new GlobalException("Sala inexistente!");
 		}
 		
+		ChatStorage.getInstance().getChats().remove(roomId);
 		RoomStorage.getInstance().getRooms().remove(roomId);
 		
 	}

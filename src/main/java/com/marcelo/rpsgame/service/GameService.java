@@ -98,7 +98,7 @@ public class GameService {
 		
 	}
 	
-	public PlayerGame checkWinner(PlayerGame player1, PlayerGame player2) {
+	private PlayerGame checkWinner(PlayerGame player1, PlayerGame player2) {
 		
 		if(player1.getMove().equals(player2.getMove())) {
 			return null;
